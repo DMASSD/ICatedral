@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import panamahitek.Arduino.PanamaHitek_Arduino;
@@ -466,6 +467,8 @@ public class ICatedral {
     
     public String getPath(){return pathFileLocation;}
     
+    public String getNtaPathFileLocation(){return NtaPathFileLocation;}
+    
     public String getcharacteristic(int characteristicPosition ){
         
         return characteristics[characteristicPosition];
@@ -475,6 +478,12 @@ public class ICatedral {
     public String getArmadura(int armaduraPosition ){
         
         return armadura[armaduraPosition];
+    
+    }
+    
+    public String[] getAllArmadura(){
+        
+        return armadura;
     
     }
     
@@ -1166,6 +1175,69 @@ public class ICatedral {
 		}
     
     }
+    
+    public static void sendCurrentListOfSongs(ArrayList<ICatedral> CurrentListOfSongs) {
+    	
+    	PanamaHitek_Arduino arduinocatedral = new PanamaHitek_Arduino();
+    	
+    	for (ICatedral song : CurrentListOfSongs) {
+    	
+	    	try {
+				arduinocatedral.arduinoTX(arduinoComPort, arduinoBaudRate);
+				
+				File readFile = new File(song.AcfPathFileLocation);
+	            BufferedReader reader = new BufferedReader(new FileReader(readFile));
+	            
+	            String line = reader.readLine();
+	            
+	            while (line != null) {
+	                arduinocatedral.sendData(line);
+	                line = reader.readLine();
+	            } 
+	            
+	            reader.close();
+	            
+	            System.out.println("Envio de datos a arduino exitoso");		
+				
+			} catch (Exception e) {
+				message = "Error de conexion con Arduino. ";
+				System.out.println(message);
+				e.printStackTrace();
+			}
+	    
+    	}
+    
+    }
+    
+    public void sendPlayList(ICatedralPlayList playList) {
+    	
+    	PanamaHitek_Arduino arduinocatedral = new PanamaHitek_Arduino();
+    	
+    	try {
+			arduinocatedral.arduinoTX(arduinoComPort, arduinoBaudRate);
+			
+			File readFile = new File(playList.getAcflPathFileLocation());
+            BufferedReader reader = new BufferedReader(new FileReader(readFile));
+            
+            String line = reader.readLine();
+            
+            while (line != null) {
+                arduinocatedral.sendData(line);
+                line = reader.readLine();
+            } 
+            
+            reader.close();
+            
+            System.out.println("Envio de datos a arduino exitoso");		
+			
+		} catch (Exception e) {
+			message = "Error de conexion con Arduino. ";
+			System.out.println(message);
+			e.printStackTrace();
+		}
+    
+    }
+    
     
     @Override
     public String toString() {

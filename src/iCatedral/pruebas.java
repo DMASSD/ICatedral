@@ -21,20 +21,18 @@ public class pruebas {
 //	    ICatedral pruebas = new ICatedral("pruebas",carpetaDefinida);
 	    
 //	    ICatedral.sendSong(pruebas);
+	       
+	    ICatedralPlayList.currentPlayList.add(guadalupe);
 	    
-	    ICatedralPlayList playlistPrueba = new ICatedralPlayList();
+	    ICatedralPlayList.currentPlayList.add(himno);
 	    
-	    playlistPrueba.currentPlayList.add(guadalupe);
+	    ICatedralPlayList.currentPlayList.add(chiapaneca);
 	    
-	    playlistPrueba.currentPlayList.add(himno);
+	    ICatedralPlayList.currentPlayList.add(navidad);
+	       
+//	    ICatedralPlayList.currentPlayList.forEach(song-> System.out.println(song.getName()));
 	    
-	    playlistPrueba.currentPlayList.add(chiapaneca);
-	    
-	    playlistPrueba.currentPlayList.add(navidad);
-	    
-	    playlistPrueba.currentPlayList.forEach(song-> System.out.println(song));
-	    
-	    
+	    ICatedralPlayList pruebaList = new ICatedralPlayList("Pruebas",carpetaDefinida);
 	    
 	    
 	    
