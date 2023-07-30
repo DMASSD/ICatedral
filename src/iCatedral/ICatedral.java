@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
+
 import panamahitek.Arduino.PanamaHitek_Arduino;
 
 public class ICatedral {
@@ -62,16 +66,19 @@ public class ICatedral {
     private static int arduinoBaudRate = 9600;
     private static String message = "";
     
-    public ICatedral(String name, String pathFileLocation,String pathFiletoConvert)
+    public ICatedral(String name)
     {
+    	String folder = chooseFolder();
+    	
+    	String FileToConvert = chooseFile()[0];
     
         this.name = name;
-        this.pathFileLocation = (pathFileLocation + "\\" + name + ".bkp");
-        NtaPathFileLocation = (pathFileLocation + "\\" + name + ".nta");
-        AcfPathFileLocation = (pathFileLocation + "\\" + name + ".acf");
+        this.pathFileLocation = (folder + "\\" + name + ".bkp");
+        NtaPathFileLocation = (folder + "\\" + name + ".nta");
+        AcfPathFileLocation = (folder + "\\" + name + ".acf");
         Arrays.fill(bellActivation, "0");
         
-        File testFile = new File(this.pathFileLocation);
+        File testFile = new File(this.AcfPathFileLocation);
         
         if (!testFile.exists()) {  
             try {
@@ -85,7 +92,7 @@ public class ICatedral {
                 e.printStackTrace();
             }
             
-            copy(pathFiletoConvert);
+            copy(FileToConvert);
             
             setCharacteristics();
             setArmadura();
@@ -110,12 +117,12 @@ public class ICatedral {
         
     }
     
-    public ICatedral(String name, String pathFileLocation){
+    public ICatedral(){
+    	
+    	String info[] = chooseFile();
         
-        this.name = name;
-        this.pathFileLocation = (pathFileLocation + "\\" + name + ".bkp");
-        NtaPathFileLocation = (pathFileLocation + "\\" + name + ".nta");
-        AcfPathFileLocation = (pathFileLocation + "\\" + name + ".acf");
+        this.name = info[1];
+        AcfPathFileLocation = info[0];
         Arrays.fill(bellActivation, "0");
         
         File testFile = new File(this.pathFileLocation);
@@ -124,19 +131,7 @@ public class ICatedral {
         	message = "Archivo añadido";
             System.out.println(message); 
             
-            setCharacteristics();
-            setArmadura();
-            setSongNumber();
-            tempoUnity = 60 / Double.parseDouble(characteristics[3]);
-            
-            createNta();
-            
-            fillNta();
-            
-            createACF();
-            
-            fillAcf();
-        }
+            }
         
         else {
             
@@ -1249,4 +1244,61 @@ public class ICatedral {
     			"\nTipo de compás: " + getcharacteristic(4) +
     			"\nSoftware utilizado: " + getcharacteristic(5);
     }
+    
+    private String[] chooseFile() {
+    	
+    	String[] info = new String[2];
+    	
+        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+
+        fileChooser.setDialogTitle("Seleccionar archivo .abc");
+        
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos .abc", "abc");        
+        fileChooser.setFileFilter(filter);
+        
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        int result = fileChooser.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+
+            java.io.File selectedFile = fileChooser.getSelectedFile();
+            info[0] = selectedFile.getAbsolutePath();
+            info[1] = selectedFile.getName();
+            
+        } else {
+        	message = "El usuario canceló la selección de la carpeta.";
+            System.out.println(message);
+        }
+        
+        return info;
+    }
+
+    private String chooseFolder() {
+    	
+    	String rutaCarpeta = "";
+    	
+        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+
+        fileChooser.setDialogTitle("Seleccionar carpeta en donde crear el archivo");
+        
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        int result = fileChooser.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+
+            java.io.File selectedFile = fileChooser.getSelectedFile();
+            rutaCarpeta = selectedFile.getAbsolutePath();
+            
+        } else {
+        	message = "El usuario canceló la selección de la carpeta.";
+            System.out.println(message);
+        }
+        
+        return rutaCarpeta;
+    }
+
+
+
 }

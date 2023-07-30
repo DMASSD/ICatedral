@@ -6,17 +6,13 @@ public class pruebas {
         
 	    String carpetaDefinida = "C:\\Users\\Daniel\\Desktop\\isaark";
 
-	    ICatedral guadalupe = new ICatedral("guadalupe",carpetaDefinida,carpetaDefinida+
-	    		"\\La_Guadalupana.abc");
+	    ICatedral guadalupe = new ICatedral("guadalupe");
 
-	    ICatedral himno = new ICatedral("himno",carpetaDefinida,carpetaDefinida+
-	    		"\\HimnoGuadalupano2.abc");
+	    ICatedral himno = new ICatedral("himno");
 
-	    ICatedral chiapaneca = new ICatedral("chiapaneca",carpetaDefinida,carpetaDefinida+
-	    		"\\LasChiapanecas.abc");
+	    ICatedral chiapaneca = new ICatedral("chiapaneca");
 //
-	    ICatedral navidad = new ICatedral("navidad",carpetaDefinida,carpetaDefinida+
-	    		"\\blanca_navidad.abc");
+	    ICatedral navidad = new ICatedral("navidad");
 
 //	    ICatedral pruebas = new ICatedral("pruebas",carpetaDefinida);
 	    
@@ -32,7 +28,7 @@ public class pruebas {
 	       
 //	    ICatedralPlayList.currentPlayList.forEach(song-> System.out.println(song.getName()));
 	    
-	    ICatedralPlayList pruebaList = new ICatedralPlayList("Pruebas",carpetaDefinida);
+	    ICatedralPlayList pruebaList = new ICatedralPlayList("Pruebas");
 	    
 	    
 	    

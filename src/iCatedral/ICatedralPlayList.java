@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
+
 public class ICatedralPlayList {
 
 	public static ArrayList<ICatedral> currentPlayList = new ArrayList<>();
@@ -58,15 +62,17 @@ public class ICatedralPlayList {
     public String[] songNumber = new String[1];
     private static String message = "";
 	
-    public ICatedralPlayList(String name, String pathFileLocation){
+    public ICatedralPlayList(String name){
+    	
+    	String folder = chooseFolder();
         
         this.name = name;
-        this.pathFileLocation = (pathFileLocation + "\\" + name + ".bkpl");
-        NtalPathFileLocation = (pathFileLocation + "\\" + name + ".ntal");
-        AcflPathFileLocation = (pathFileLocation + "\\" + name + ".acfl");
+        this.pathFileLocation = (folder + "\\" + name + ".bkpl");
+        NtalPathFileLocation = (folder + "\\" + name + ".ntal");
+        AcflPathFileLocation = (folder + "\\" + name + ".acfl");
         Arrays.fill(bellActivation, "0");
         
-        File testFile = new File(this.pathFileLocation);
+        File testFile = new File(this.AcflPathFileLocation);
         
         if (!testFile.exists()) {  
             try {
@@ -98,9 +104,12 @@ public class ICatedralPlayList {
         
     }
     
-    public ICatedralPlayList(String AcfPathFileLocation){
+    public ICatedralPlayList(){
         
-        this.AcflPathFileLocation = AcfPathFileLocation;
+    	String info[] = chooseFile();
+    	
+        this.AcflPathFileLocation = info[0];
+        this.name = info[1];
         Arrays.fill(bellActivation, "0");
         
         File testFile = new File(this.pathFileLocation);
@@ -584,4 +593,59 @@ public class ICatedralPlayList {
     }
     
     public String getAcflPathFileLocation(){return AcflPathFileLocation;}
+    
+    private String[] chooseFile() {
+    	
+    	String[] info = new String[2];
+    	
+        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+
+        fileChooser.setDialogTitle("Seleccionar archivo .acfl");
+        
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos .acfl", "acfl");        
+        fileChooser.setFileFilter(filter);
+        
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        int result = fileChooser.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+
+            java.io.File selectedFile = fileChooser.getSelectedFile();
+            info[0] = selectedFile.getAbsolutePath();
+            info[1] = selectedFile.getName();
+            
+        } else {
+        	message = "El usuario canceló la selección de la carpeta.";
+            System.out.println(message);
+        }
+        
+        return info;
+    }
+
+    private String chooseFolder() {
+    	
+    	String rutaCarpeta = "";
+    	
+        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+
+        fileChooser.setDialogTitle("Seleccionar carpeta en donde crear el archivo");
+        
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        int result = fileChooser.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+
+            java.io.File selectedFile = fileChooser.getSelectedFile();
+            rutaCarpeta = selectedFile.getAbsolutePath();
+            
+        } else {
+        	message = "El usuario canceló la selección de la carpeta.";
+            System.out.println(message);
+        }
+        
+        return rutaCarpeta;
+    }
+
 }
