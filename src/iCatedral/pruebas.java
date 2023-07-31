@@ -4,32 +4,25 @@ public class pruebas {
 
 	public static void main(String[] args) {  
         
-	    String carpetaDefinida = "C:\\Users\\Daniel\\Desktop\\isaark";
-
-	    ICatedral guadalupe = new ICatedral("guadalupe");
-
-	    ICatedral himno = new ICatedral("himno");
-
-	    ICatedral chiapaneca = new ICatedral("chiapaneca");
+//	    ICatedral guadalupe = new ICatedral("");
 //
-	    ICatedral navidad = new ICatedral("navidad");
-
-//	    ICatedral pruebas = new ICatedral("pruebas",carpetaDefinida);
+//	    ICatedral himno = new ICatedral("");
+//
+//	    ICatedral chiapaneca = new ICatedral("");
+//
+//	    ICatedral navidad = new ICatedral("");
+//	       
+//	    ICatedralPlayList.currentPlayList.add(guadalupe);
+//	    
+//	    ICatedralPlayList.currentPlayList.add(himno);
+//	    
+//	    ICatedralPlayList.currentPlayList.add(chiapaneca);
+//	    
+//	    ICatedralPlayList.currentPlayList.add(navidad);
+	       	    
+	    ICatedralPlayList pruebaList = new ICatedralPlayList("");
 	    
-//	    ICatedral.sendSong(pruebas);
-	       
-	    ICatedralPlayList.currentPlayList.add(guadalupe);
-	    
-	    ICatedralPlayList.currentPlayList.add(himno);
-	    
-	    ICatedralPlayList.currentPlayList.add(chiapaneca);
-	    
-	    ICatedralPlayList.currentPlayList.add(navidad);
-	       
-//	    ICatedralPlayList.currentPlayList.forEach(song-> System.out.println(song.getName()));
-	    
-	    ICatedralPlayList pruebaList = new ICatedralPlayList("Pruebas");
-	    
+	    System.out.println(pruebaList.toString());
 	    
 	    
 	}

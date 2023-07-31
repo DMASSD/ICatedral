@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
@@ -66,13 +67,14 @@ public class ICatedral {
     private static int arduinoBaudRate = 9600;
     private static String message = "";
     
-    public ICatedral(String name)
-    {
+    public ICatedral()
+    {   	
     	String folder = chooseFolder();
     	
-    	String FileToConvert = chooseFile()[0];
+    	String FileToConvert[] = chooseFile("abc");
+    	
+    	this.name = FileToConvert[1].substring(0, FileToConvert[1].length() - 4);
     
-        this.name = name;
         this.pathFileLocation = (folder + "\\" + name + ".bkp");
         NtaPathFileLocation = (folder + "\\" + name + ".nta");
         AcfPathFileLocation = (folder + "\\" + name + ".acf");
@@ -92,7 +94,7 @@ public class ICatedral {
                 e.printStackTrace();
             }
             
-            copy(FileToConvert);
+            copy(FileToConvert[0]);
             
             setCharacteristics();
             setArmadura();
@@ -117,25 +119,33 @@ public class ICatedral {
         
     }
     
-    public ICatedral(){
+    public ICatedral(String nulo){
     	
-    	String info[] = chooseFile();
+    	nulo = null;
+    	
+    	String infoAcf[] = chooseFile("acf");
         
-        this.name = info[1];
-        AcfPathFileLocation = info[0];
+    	this.name = infoAcf[1].substring(0, infoAcf[1].length() - 4);
+        AcfPathFileLocation = infoAcf[0];
+        NtaPathFileLocation = infoAcf[0].substring(0, infoAcf[0].length() - 3) + "nta";
+        pathFileLocation = NtaPathFileLocation;
         Arrays.fill(bellActivation, "0");
         
-        File testFile = new File(this.pathFileLocation);
+        File testFileNta = new File(this.NtaPathFileLocation);
         
-        if (testFile.exists()) {
+        File testFileAcf = new File(this.AcfPathFileLocation);
+        
+        if (testFileNta.exists() && testFileAcf.exists()) {
         	message = "Archivo añadido";
             System.out.println(message); 
+            
+            setArmadura();
             
             }
         
         else {
             
-        	message = "No existe ningun archivo con ese nombre";
+        	message = "Erro al añadir archivo";
             System.out.println(message);}
         
     }
@@ -328,7 +338,7 @@ public class ICatedral {
                         
                         writer.newLine();
                         
-                        binario = toBinario(line.substring(8));
+                        binario = toBinario("" + line.charAt(8));
                         
                         writer.write(binario + " ");
                         
@@ -1232,7 +1242,7 @@ public class ICatedral {
 		}
     
     }
-    
+
     
     @Override
     public String toString() {
@@ -1245,15 +1255,15 @@ public class ICatedral {
     			"\nSoftware utilizado: " + getcharacteristic(5);
     }
     
-    private String[] chooseFile() {
+    private String[] chooseFile(String extencion) {
     	
     	String[] info = new String[2];
     	
         JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
-        fileChooser.setDialogTitle("Seleccionar archivo .abc");
+        fileChooser.setDialogTitle("Seleccionar archivo ." + extencion + " a agregar.");
         
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos .abc", "abc");        
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos ."+ extencion, extencion);        
         fileChooser.setFileFilter(filter);
         
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);

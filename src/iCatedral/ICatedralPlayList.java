@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
@@ -61,12 +62,14 @@ public class ICatedralPlayList {
     public String[] armadura;
     public String[] songNumber = new String[1];
     private static String message = "";
+    public String SongsIn;
 	
-    public ICatedralPlayList(String name){
+    public ICatedralPlayList(){
+    	
+    	name = askName();
     	
     	String folder = chooseFolder();
         
-        this.name = name;
         this.pathFileLocation = (folder + "\\" + name + ".bkpl");
         NtalPathFileLocation = (folder + "\\" + name + ".ntal");
         AcflPathFileLocation = (folder + "\\" + name + ".acfl");
@@ -95,6 +98,10 @@ public class ICatedralPlayList {
             createACFL();
             
             fillAcfL();
+            
+            SongsIn = setSongsIn();
+            
+            currentPlayList.clear();
         }
         
         else {
@@ -104,19 +111,25 @@ public class ICatedralPlayList {
         
     }
     
-    public ICatedralPlayList(){
+    public ICatedralPlayList(String path){
+    	
+    	path = null;
         
     	String info[] = chooseFile();
     	
         this.AcflPathFileLocation = info[0];
+        this.NtalPathFileLocation = info[0].substring(0, info[0].length() - 4) + "ntal";
         this.name = info[1];
         Arrays.fill(bellActivation, "0");
         
-        File testFile = new File(this.pathFileLocation);
+        File testFileAcfl = new File(this.AcflPathFileLocation);
+        File testFileNtal = new File(this.NtalPathFileLocation);
         
-        if (testFile.exists()) {  
+        if (testFileAcfl.exists() && testFileNtal.exists()){  
+        	SongsIn = serchParameter("Nombre de la cancion:");
         	message = "Se ha añadido el  archivo " + name;
             System.out.println(message);
+            currentPlayList.clear();
         }
         
         else {
@@ -175,7 +188,10 @@ public class ICatedralPlayList {
 	            while (line != null) {
 	            	
 	            	if (line.contains("Cancion")) {
-	                    line = "Cancion " + songNumer;
+	            		
+	                    line = "Cancion " + songNumer + " Nombre de la cancion: " 
+	                    + song.getName();
+	                    
 	                    songNumer++;
 	                }
 
@@ -229,7 +245,7 @@ public class ICatedralPlayList {
                         
                         writer.newLine();
                         
-                        binario = toBinario(line.substring(8));
+                        binario = toBinario("" + line.charAt(8));
                         
                         writer.write(binario + " ");
                         
@@ -240,8 +256,12 @@ public class ICatedralPlayList {
                     }
                     
                     else if (line.contains("K")){
-                        kcounter++;
-                        line = reader.readLine();}
+                    	
+                    	line = reader.readLine();
+                    	
+                    	if(armadura.length > 1)kcounter++;
+                    	
+                        }
                     
                     else {
                     
@@ -588,7 +608,7 @@ public class ICatedralPlayList {
     		
     	}
     	    	
-    	armadura = armaduraSetter.toArray(new String[armaduraSetter.size()]);
+    	this.armadura = armaduraSetter.toArray(new String[armaduraSetter.size()]);
     	
     }
     
@@ -629,7 +649,7 @@ public class ICatedralPlayList {
     	
         JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
-        fileChooser.setDialogTitle("Seleccionar carpeta en donde crear el archivo");
+        fileChooser.setDialogTitle("Seleccionar carpeta en donde crear el archivo " + name);
         
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
@@ -647,5 +667,58 @@ public class ICatedralPlayList {
         
         return rutaCarpeta;
     }
+    
+    private String askName() {
+    	
+   	 String userInput = JOptionPane.showInputDialog(null, "Coloque el nombre del"
+   	 		+ " archivo a crear.");
+
+        if (userInput != null) {
+       	 return userInput;
+        } 
+
+        return "Archivo sin nombre";
+   }
+
+    private String setSongsIn() {
+    	
+    	String resultado = "Las canciones actuales de la lista son:";
+    	
+    	for(ICatedral song : currentPlayList) {
+    		resultado = resultado + "\n" + song.getName();
+    	}
+    	
+    	return resultado;
+    }
+    
+    @Override
+    public String toString() {return SongsIn;}
+
+    private String serchParameter(String parameter){
+        
+        String result = "Las canciones actuales de la lista son:";
+        
+        try {
+            File readFile = new File(NtalPathFileLocation);
+            BufferedReader reader = new BufferedReader(new FileReader(readFile));
+            String line = reader.readLine();
+            while (line != null) {
+                if (line.contains(parameter)) {
+                    int index = line.indexOf(parameter);
+                    result += "\n" + line.substring(index + parameter.length());
+                }
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+        	message = "Erro al buscar parametro. ";
+            System.out.println(message + e.getMessage());
+        }
+        
+        if(result.isEmpty()){result = "Sin dato";}
+        
+        return result;
+    }
+
 
 }
