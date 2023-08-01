@@ -81,7 +81,23 @@ public class ICatedralPlayList {
             try {
                 FileWriter creator = new FileWriter(this.pathFileLocation);
                 creator.close();
+                
                 message = "Se ha creado el  archivo " + name;
+                
+                setArmadura(currentPlayList);
+                
+                createNtal();
+                
+                fillNtal(currentPlayList);
+                
+                createACFL();
+                
+                fillAcfL();
+                
+                SongsIn = setSongsIn();
+                
+                currentPlayList.clear();                
+                
                 System.out.println(message);
             } catch (IOException e) {
             	message = "Ha ocurrido un error al crear el archivo.";
@@ -89,19 +105,7 @@ public class ICatedralPlayList {
                 e.printStackTrace();
             }
             
-            setArmadura(currentPlayList);
-                        
-            createNtal();
             
-            fillNtal(currentPlayList);
-            
-            createACFL();
-            
-            fillAcfL();
-            
-            SongsIn = setSongsIn();
-            
-            currentPlayList.clear();
         }
         
         else {
@@ -222,6 +226,7 @@ public class ICatedralPlayList {
         String octava = "5";
         String binario;
         int kcounter = 0;
+        boolean firstK = false;
         int alteration = 0;
         char letter;
         int charPosition;
@@ -259,7 +264,11 @@ public class ICatedralPlayList {
                     	
                     	line = reader.readLine();
                     	
-                    	if(armadura.length > 1)kcounter++;
+                    	if(armadura.length > 1) {
+                    		
+                    		if(firstK) {kcounter++;}
+                    	
+                    		firstK = true;}
                     	
                         }
                     
